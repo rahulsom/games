@@ -1,0 +1,16 @@
+# JetBrains template
+/.idea/
+/*.iws
+/*.iml
+/*.ipr
+/out/
+/.idea_modules/
+
+# Eclipse/VS Code
+/.classpath
+/.project
+/.settings
+/bin
+
+# Lib
+/lib
