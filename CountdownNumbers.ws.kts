@@ -49,19 +49,21 @@ fun solve(target: Int, numbers: List<Term>, tasks: MutableList<() -> Term?>): Te
       val left = numbers[i]
       for (j in i + 1 until numbers.size) {
         val right = numbers[j]
-        for (op in Operator.values()) {
-          listOf(
-            Term.Expr(left, op, right),
-            Term.Expr(right, op, left)
-          ).forEach { expr ->
-            val e = expr.result()
-            if (e is Maybe.Just) {
-              if (e.value == target) {
-                return expr
-              } else {
-                tasks.add {
-                  solve(target, listOf(expr) + numbers.filter { it != left && it != right }, tasks)
-                }
+        listOf(
+          Term.Expr(left, Operator.DIVIDE, right),
+          Term.Expr(right, Operator.DIVIDE, left),
+          Term.Expr(left, Operator.MINUS, right),
+          Term.Expr(right, Operator.MINUS, left),
+          Term.Expr(left, Operator.PLUS, right),
+          Term.Expr(left, Operator.TIMES, right),
+        ).forEach { expr ->
+          val e = expr.result()
+          if (e is Maybe.Just) {
+            if (e.value == target) {
+              return expr
+            } else {
+              tasks.add {
+                solve(target, listOf(expr) + numbers.filter { it != left && it != right }, tasks)
               }
             }
           }
@@ -86,4 +88,7 @@ fun solve(target: Int, numbers: List<Int>) {
   }
 }
 
-solve(target = 975, numbers = listOf(100, 1, 3, 10, 4, 2))
+if (args.size == 7) {
+  val nums = args.map { it.toInt() }
+  solve(target = nums.first(), numbers = nums.drop(1))
+}
