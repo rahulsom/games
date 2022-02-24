@@ -59,12 +59,9 @@ fun solve(target: Int, numbers: List<Term>, tasks: MutableList<() -> Term?>): Te
         ).forEach { expr ->
           val e = expr.result()
           if (e is Maybe.Just) {
-            if (e.value == target) {
-              return expr
-            } else {
-              tasks.add {
-                solve(target, listOf(expr) + numbers.filter { it != left && it != right }, tasks)
-              }
+            when (e.value) {
+              target -> return expr
+              else -> tasks.add { solve(target, listOf(expr) + numbers.filter { it != left && it != right }, tasks) }
             }
           }
         }
